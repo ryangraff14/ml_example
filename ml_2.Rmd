@@ -10,7 +10,8 @@ knitr::opts_chunk$set(echo = FALSE)
 library(fs)
 library(tidymodels)
 library(tidyverse)
-
+library(yardstick)
+library(gt)
 ```
 
 ## Predicting Democratic Votes
@@ -78,7 +79,8 @@ clean <- raw_data %>%
 # All of this is relatively simple because there is only one independent
 # variable in the model and the dependent variable only has two levels.
 
-model_1 <- glm(data = clean, dvote ~ gender, family = "binomial")
+# plus sign is major key here
+model_1 <- glm(data = clean, dvote ~ gender + party, family = "binomial")
 
 x_1 <- clean %>% 
   mutate(prediction = predict(model_1, type = "response")) %>% 
@@ -86,6 +88,10 @@ x_1 <- clean %>%
 
 ```
 
+```{r}
+metrics(x_1,dvote,pred_dvote) %>% 
+  gt()
+```
 
 
 
